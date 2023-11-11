@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-var (
-	ROCK     int = 0
-	PAPER    int = 1
-	SCISSORS int = 2
+const (
+	rock = iota
+	paper
+	scissors
 )
 
 func main() {
@@ -70,11 +70,11 @@ func score(round [2]string) (mine, his int) {
 func whichHand(play string) int {
 	switch play {
 	case "A", "X":
-		return ROCK
+		return rock
 	case "B", "Y":
-		return PAPER
+		return paper
 	case "C", "Z":
-		return SCISSORS
+		return scissors
 	default:
 		panic("Illegal play!")
 	}
@@ -82,11 +82,11 @@ func whichHand(play string) int {
 
 func scoreHand(hand int) int {
 	switch hand {
-	case ROCK:
+	case rock:
 		return 1
-	case PAPER:
+	case paper:
 		return 2
-	case SCISSORS:
+	case scissors:
 		return 3
 	default:
 		panic("Illegal hand!")
@@ -95,9 +95,9 @@ func scoreHand(hand int) int {
 
 func scoreOutcome(mine, his int) int {
 	switch {
-	case mine == ROCK && his == SCISSORS ||
-		mine == PAPER && his == ROCK ||
-		mine == SCISSORS && his == PAPER:
+	case mine == rock && his == scissors ||
+		mine == paper && his == rock ||
+		mine == scissors && his == paper:
 		return 6 // Won
 	case mine == his:
 		return 3 // Draw
