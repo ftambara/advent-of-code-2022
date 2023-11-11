@@ -2,23 +2,9 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 )
-
-func main() {
-	numbersList, err := readCaloriesFile("day1/input.txt")
-	if err != nil {
-		fmt.Println("Error reading input.txt:", err)
-		return
-	}
-	var totals []int
-	for _, numbers := range numbersList {
-		totals = append(totals, sum(numbers))
-	}
-	fmt.Printf("Max total: %v\n", largest(totals))
-}
 
 func readCaloriesFile(filename string) ([][]int, error) {
 	// TODO: Solve by manually finding lines
