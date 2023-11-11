@@ -11,6 +11,7 @@ func main() {
 	numbersList, err := readCaloriesFile("day1/input.txt")
 	if err != nil {
 		fmt.Println("Error reading input.txt:", err)
+		return
 	}
 	var totals []int
 	for _, numbers := range numbersList {
