@@ -19,11 +19,10 @@ func main() {
 		fmt.Printf("Error while reading day2/input.txt: %v", err)
 	}
 	myTotal, hisTotal := 0, 0
-	for i, round := range rounds {
+	for _, round := range rounds {
 		mine, his := score(round)
 		myTotal += mine
 		hisTotal += his
-		fmt.Printf("L%v: %v -> mine: %v, his: %v\n", i, round, mine, his)
 	}
 	fmt.Printf("My total score: %v\n", myTotal)
 	fmt.Printf("His total score: %v\n", hisTotal)
@@ -60,8 +59,6 @@ func score(round [2]string) (mine, his int) {
 	mine = whichHand(round[1])
 
 	myScore := scoreHand(mine)
-	fmt.Println(scoreHand(mine))
-	fmt.Println(scoreOutcome(mine, his))
 	myScore += scoreOutcome(mine, his)
 
 	hisScore := scoreHand(his)
