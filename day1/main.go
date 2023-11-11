@@ -25,6 +25,8 @@ func readCaloriesFile(filename string) ([][]int, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer r.Close()
+
 	scanner := bufio.NewScanner(r)
 	var (
 		bundles [][]int
