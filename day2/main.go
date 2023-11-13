@@ -20,9 +20,11 @@ func main() {
 	}
 	myTotal, hisTotal := 0, 0
 	for _, round := range rounds {
-		mine, his := score(round)
-		myTotal += mine
-		hisTotal += his
+		hisHand := whichHand(round[0])
+		myHand := whichHand(round[1])
+
+		myTotal += score(myHand, hisHand)
+		hisTotal += score(hisHand, myHand)
 	}
 	fmt.Printf("My total score: %v\n", myTotal)
 	fmt.Printf("His total score: %v\n", hisTotal)
@@ -54,17 +56,10 @@ func readStrategy(filename string) ([][2]string, error) {
 	return rounds, nil
 }
 
-func score(round [2]string) (mine, his int) {
-	his = whichHand(round[0])
-	mine = whichHand(round[1])
-
-	myScore := scoreHand(mine)
-	myScore += scoreOutcome(mine, his)
-
-	hisScore := scoreHand(his)
-	hisScore += scoreOutcome(his, mine)
-
-	return myScore, hisScore
+func score(mine, his int) int {
+	s := scoreHand(mine)
+	s += scoreOutcome(mine, his)
+	return s
 }
 
 func whichHand(play string) int {
