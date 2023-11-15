@@ -39,15 +39,14 @@ func readStacks(f *os.File) site {
 	// Seek the first line that contains a crate
 	for scanner.Scan() {
 		ln := scanner.Text()
-		idx := strings.IndexByte(ln, '[')
-		if idx >= 0 && ln[idx+2] == ']' {
+		if strings.Contains(ln, "[") {
 			break
 		}
 	}
 	// Read until the next line that doesn't
 	for scanner.Scan() {
 		ln := scanner.Text()
-		if idx := strings.IndexByte(ln, '['); idx < 0 {
+		if !strings.Contains(ln, "[") {
 			break
 		}
 		lines = append(lines, ln)
@@ -55,14 +54,16 @@ func readStacks(f *os.File) site {
 
 	// Build stacks from the base
 	baseLine := lines[len(lines)-1]
-	cratesN := strings.Count(baseLine, "[")
-	stacks := make(site, cratesN)
+	stacksN := strings.Count(baseLine, "[")
+	stacks := make(site, stacksN)
 	start := strings.Index(baseLine, "[") + 1
-	if start < 0 {
+	if start <= 0 {
 		panic("malformed crate string")
 	}
 	curStack := 0
+	// Traverse by column
 	for i := start; i < len(baseLine); i += len("[_] ") {
+		// Go up until you reach the limit or there is no crate
 		for j := len(lines) - 1; j >= 0; j-- {
 			crateLetter := lines[j][i]
 			if crateLetter == ' ' {
