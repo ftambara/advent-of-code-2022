@@ -10,7 +10,16 @@ import (
 
 func main() {
 	stacks, steps := readInstructions("day5/input.txt")
-	fmt.Print(stacks, steps)
+	for _, s := range steps {
+		stacks = move(stacks, s)
+	}
+	printSite(stacks)
+
+	// Print topmost crates
+	for _, stack := range stacks {
+		fmt.Printf("%c", stack[len(stack)-1])
+	}
+	fmt.Println()
 }
 
 type step struct {
@@ -20,6 +29,34 @@ type step struct {
 }
 
 type site [][]byte
+
+func move(stacks site, s step) site {
+	// Step positions count from 1, rectify
+	from := s.from - 1
+	to := s.to - 1
+	for i := 0; i < s.n; i++ {
+		fromHeight := len(stacks[from]) - 1
+		// Check if move is valid
+		if fromHeight < 0 {
+			panic("trying to take a crate from an empty stack")
+		}
+		// Grow the 'to' slice
+		stacks[to] = append(stacks[to], stacks[from][fromHeight])
+		// Shrink the 'from' slice
+		stacks[from] = stacks[from][:fromHeight]
+	}
+	return stacks
+}
+
+func printSite(s site) {
+	for _, stack := range s {
+		for _, crate := range stack {
+			// Print crates left to right
+			fmt.Printf("[%c] ", crate)
+		}
+		fmt.Println()
+	}
+}
 
 func readInstructions(filename string) (site, []step) {
 	f, err := os.Open(filename)
