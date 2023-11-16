@@ -36,14 +36,7 @@ func readStacks(f *os.File) site {
 	scanner := bufio.NewScanner(f)
 
 	lines := []string{}
-	// Seek the first line that contains a crate
-	for scanner.Scan() {
-		ln := scanner.Text()
-		if strings.Contains(ln, "[") {
-			break
-		}
-	}
-	// Read until the next line that doesn't
+	// Read until the line doesn't contain a crate
 	for scanner.Scan() {
 		ln := scanner.Text()
 		if !strings.Contains(ln, "[") {
@@ -82,16 +75,13 @@ func readStacks(f *os.File) site {
 func readSteps(f *os.File) []step {
 	scanner := bufio.NewScanner(f)
 
-	// Seek the first line that contains a move
-	for scanner.Scan() {
-		ln := scanner.Text()
-		if strings.Contains(ln, "move") {
-			break
-		}
-	}
 	steps := []step{}
 	for scanner.Scan() {
 		ln := scanner.Text()
+		// Skip lines that don't contain moves
+		if !strings.Contains(ln, "move") {
+			continue
+		}
 		var (
 			n    int
 			from int
