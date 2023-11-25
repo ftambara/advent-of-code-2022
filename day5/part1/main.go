@@ -10,10 +10,10 @@ import (
 
 func main() {
 	stacks, steps := readInstructions("day5/input.txt")
-	for _, s := range steps {
-		stacks = move(stacks, s)
+	for _, step := range steps {
+		stacks = move(stacks, step)
 	}
-	printSite(stacks)
+	printStacks(stacks)
 
 	// Print topmost crates
 	for _, stack := range stacks {
@@ -28,13 +28,13 @@ type step struct {
 	to   int
 }
 
-type site [][]byte
+type stacks [][]byte
 
-func move(stacks site, s step) site {
+func move(stacks stacks, step step) stacks {
 	// Step positions count from 1, rectify
-	from := s.from - 1
-	to := s.to - 1
-	for i := 0; i < s.n; i++ {
+	from := step.from - 1
+	to := step.to - 1
+	for i := 0; i < step.n; i++ {
 		fromHeight := len(stacks[from]) - 1
 		// Check if move is valid
 		if fromHeight < 0 {
@@ -48,8 +48,8 @@ func move(stacks site, s step) site {
 	return stacks
 }
 
-func printSite(s site) {
-	for _, stack := range s {
+func printStacks(stacks stacks) {
+	for _, stack := range stacks {
 		for _, crate := range stack {
 			// Print crates left to right
 			fmt.Printf("[%c] ", crate)
@@ -58,7 +58,7 @@ func printSite(s site) {
 	}
 }
 
-func readInstructions(filename string) (site, []step) {
+func readInstructions(filename string) (stacks, []step) {
 	f, err := os.Open(filename)
 	if err != nil {
 		panic(err)
@@ -69,7 +69,7 @@ func readInstructions(filename string) (site, []step) {
 	return stacks, steps
 }
 
-func readStacks(f *os.File) site {
+func readStacks(f *os.File) stacks {
 	scanner := bufio.NewScanner(f)
 
 	lines := []string{}
@@ -85,7 +85,7 @@ func readStacks(f *os.File) site {
 	// Build stacks from the base
 	baseLine := lines[len(lines)-1]
 	stacksN := strings.Count(baseLine, "[")
-	stacks := make(site, stacksN)
+	stacks := make(stacks, stacksN)
 	start := strings.Index(baseLine, "[") + 1
 	if start <= 0 {
 		panic("malformed crate string")
