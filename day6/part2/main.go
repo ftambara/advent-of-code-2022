@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-        "fmt"
+	"fmt"
 	"os"
 )
 
@@ -19,12 +19,12 @@ func main() {
 	for scanner.Scan() {
 		// Assume string is a valid ASCII character
 		last14 = *last14.push(scanner.Text()[0])
-                marker, done := last14.marker()
-                if !done {
-                    continue
-                }
+		marker, done := last14.marker()
+		if !done {
+			continue
+		}
 		fmt.Printf("The marker is at position %v\n", marker)
-                return
+		return
 	}
 
 }
@@ -67,7 +67,7 @@ func (s *Tuner) marker() (pos int, done bool) {
 		if unique[string(b)] {
 			return s.count, false
 		}
-                unique[string(b)] = true
+		unique[string(b)] = true
 	}
 	return s.count, true
 }
