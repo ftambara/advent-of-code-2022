@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-type ScannerState int
-
 func main() {
 	terminalLog := readTerminalLog("day7/input.txt")
 	treeScanner := newTreeScanner()
