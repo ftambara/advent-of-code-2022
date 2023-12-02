@@ -118,21 +118,6 @@ func (t *TreeScanner) cd(dirname string) {
 	}
 }
 
-func PrintTree(d *Directory) {
-	printTreeRec(d, 0)
-}
-
-func printTreeRec(d *Directory, indent int) {
-	tabs := strings.Repeat("  ", indent)
-	fmt.Printf("%v- %v\n", tabs, d.path())
-	for i, f := range d.files {
-		fmt.Printf("%v%v. f: %v\n", tabs, i, f.filesize)
-	}
-	for _, d := range d.children {
-		printTreeRec(d, indent+1)
-	}
-}
-
 type Directory struct {
 	name     string
 	parent   *Directory
@@ -156,16 +141,6 @@ func (d *Directory) size() int {
 		total += f.filesize
 	}
 	return total
-}
-
-func (d *Directory) du() map[*Directory]int {
-	res := map[*Directory]int{d: d.size()}
-	for _, c := range d.children {
-		for cc, m := range c.du() {
-			res[cc] = m
-		}
-	}
-	return res
 }
 
 func (d *Directory) flatList() []*Directory {

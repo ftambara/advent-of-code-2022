@@ -149,16 +149,6 @@ func (d *Directory) size() int {
 	return total
 }
 
-func (d *Directory) du() map[*Directory]int {
-	res := map[*Directory]int{d: d.size()}
-	for _, c := range d.children {
-		for cc, m := range c.du() {
-			res[cc] = m
-		}
-	}
-	return res
-}
-
 func (d *Directory) flatList() []*Directory {
 	result := []*Directory{d}
 	for _, c := range d.children {
