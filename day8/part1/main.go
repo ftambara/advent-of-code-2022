@@ -11,44 +11,42 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	totalVisible := 0
-	for _, row := range forest {
+	for i, row := range forest {
 		// Count left to right
-		count := visible(row, genSequence(0, len(row)))
+		lr := genSequence(Coord{0, i}, moveRight, len(row))
+		count := visible(forest, lr)
 		fmt.Printf("%v: visible (left to right): %v\n", row, count)
-		totalVisible += count
-		fmt.Println()
-		// Count right to left
-		count = visible(row, genSequence(len(row)-1, -1))
-		fmt.Printf("%v: visible (right to left): %v\n", row, count)
-		totalVisible += count
-		fmt.Println()
 	}
 }
 
-func genSequence(start, end int) []int {
-	var step int
-	switch {
-	case start < end:
-		step = 1
-	case start > end:
-		step = -1
-	default:
-		return nil
-	}
-	seq := make([]int, (end-start)/step)
-	for i := 0; i < len(seq); i++ {
-		seq[i] = start + i*step
+type Coord struct {
+	col int
+	row int
+}
+
+func moveRight(c Coord) Coord {
+	return Coord{c.col + 1, c.row}
+}
+
+func genSequence(start Coord, next func(Coord) Coord, n int) []Coord {
+	seq := []Coord{start}
+	pos := start
+	// First one is already in, do one less than n
+	for i := 0; i < n-1; i++ {
+		pos = next(pos)
+		seq = append(seq, pos)
 	}
 	return seq
 }
 
-func visible(row, sequence []int) int {
-	highest := row[sequence[0]]
+func visible(forest [][]int, sequence []Coord) int {
+	firstC := sequence[0]
+	highest := forest[firstC.row][firstC.col]
 	count := 1 // First one counts
-	for _, i := range sequence {
-		if row[i] > highest {
-			highest = row[i]
+	for _, c := range sequence {
+		tree := forest[c.row][c.col]
+		if tree > highest {
+			highest = tree
 			count++
 		}
 	}
