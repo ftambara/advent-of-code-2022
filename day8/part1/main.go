@@ -7,30 +7,30 @@ import (
 )
 
 func main() {
-	forest, err := readForest("day8/example.txt")
+	forest, err := readForest("day8/input.txt")
 	if err != nil {
 		panic(err)
 	}
-	total := 0
+	allVisible := []Coord{}
 	for i := range forest {
 		row := forest[i]
 		// Count left to right
 		lr := genSequence(Coord{0, i}, moveRight, len(row))
-		total += visible(forest, lr)
+		allVisible = append(allVisible, visible(forest, lr)...)
 		// Count right to left
 		rl := genSequence(Coord{len(row) - 1, i}, moveLeft, len(row))
-		total += visible(forest, rl)
+		allVisible = append(allVisible, visible(forest, rl)...)
 	}
 	// Row indices are inverted due to reading order
 	for j := range forest[0] {
 		// Count top to bottom
 		tb := genSequence(Coord{j, 0}, increaseRow, len(forest))
-		total += visible(forest, tb)
+		allVisible = append(allVisible, visible(forest, tb)...)
 		// Count bottom to top
 		bt := genSequence(Coord{j, len(forest) - 1}, decreaseRow, len(forest))
-		total += visible(forest, bt)
+		allVisible = append(allVisible, visible(forest, bt)...)
 	}
-	fmt.Printf("Total visible (wrong!): %d\n", total)
+	fmt.Printf("Total visible: %d\n", len(unique(allVisible)))
 }
 
 type Coord struct {
@@ -65,18 +65,26 @@ func genSequence(start Coord, next func(Coord) Coord, n int) []Coord {
 	return seq
 }
 
-func visible(forest [][]int, sequence []Coord) int {
+func unique(coords []Coord) map[Coord]bool {
+	m := map[Coord]bool{}
+	for _, c := range coords {
+		m[c] = true
+	}
+	return m
+}
+
+func visible(forest [][]int, sequence []Coord) []Coord {
 	firstC := sequence[0]
 	highest := forest[firstC.row][firstC.col]
-	count := 1 // First one counts
+	result := []Coord{firstC}
 	for _, c := range sequence {
 		tree := forest[c.row][c.col]
 		if tree > highest {
 			highest = tree
-			count++
+			result = append(result, c)
 		}
 	}
-	return count
+	return result
 }
 
 func readForest(filename string) ([][]int, error) {
