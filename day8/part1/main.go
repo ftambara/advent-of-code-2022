@@ -12,8 +12,20 @@ func main() {
 		panic(err)
 	}
 	for _, row := range forest {
-		fmt.Println(row)
+		fmt.Printf("%v: visible (left to right): %v\n", row, visible(row))
 	}
+}
+
+func visible(row []int) int {
+	highest := row[0]
+	count := 1 // First one counts
+	for _, tree := range row {
+		if tree > highest {
+			highest = tree
+			count++
+		}
+	}
+	return count
 }
 
 func readForest(filename string) ([][]int, error) {
