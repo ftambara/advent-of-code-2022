@@ -11,12 +11,26 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	for i, row := range forest {
+	total := 0
+	for i := range forest {
+		row := forest[i]
 		// Count left to right
 		lr := genSequence(Coord{0, i}, moveRight, len(row))
-		count := visible(forest, lr)
-		fmt.Printf("%v: visible (left to right): %v\n", row, count)
+		total += visible(forest, lr)
+		// Count right to left
+		rl := genSequence(Coord{len(row) - 1, i}, moveLeft, len(row))
+		total += visible(forest, rl)
 	}
+	// Row indices are inverted due to reading order
+	for j := range forest[0] {
+		// Count top to bottom
+		tb := genSequence(Coord{j, 0}, increaseRow, len(forest))
+		total += visible(forest, tb)
+		// Count bottom to top
+		bt := genSequence(Coord{j, len(forest) - 1}, decreaseRow, len(forest))
+		total += visible(forest, bt)
+	}
+	fmt.Printf("Total visible (wrong!): %d\n", total)
 }
 
 type Coord struct {
@@ -26,6 +40,18 @@ type Coord struct {
 
 func moveRight(c Coord) Coord {
 	return Coord{c.col + 1, c.row}
+}
+
+func moveLeft(c Coord) Coord {
+	return Coord{c.col - 1, c.row}
+}
+
+func decreaseRow(c Coord) Coord {
+	return Coord{c.col, c.row - 1}
+}
+
+func increaseRow(c Coord) Coord {
+	return Coord{c.col, c.row + 1}
 }
 
 func genSequence(start Coord, next func(Coord) Coord, n int) []Coord {
