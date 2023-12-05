@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	forest, err := readForest("day8/example.txt")
+	forest, err := readForest("day8/input.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -38,10 +38,18 @@ func main() {
 				sees(forest, toBottom) *
 				sees(forest, toLeft) *
 				sees(forest, toRight)
-			fmt.Printf("[%v] ", score)
+			scores[y][x] = score
 		}
-		fmt.Println()
 	}
+	best := Coord{0, 0}
+	for row, scoreRow := range scores {
+		for col, score := range scoreRow {
+			if score > scores[best.row][best.col] {
+				best = Coord{row: row, col: col}
+			}
+		}
+	}
+	fmt.Printf("Highest score: %v @ %+v\n", scores[best.row][best.col], best)
 }
 
 type Coord struct {
