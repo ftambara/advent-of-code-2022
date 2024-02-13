@@ -63,36 +63,36 @@ func findPath(heightMap [][]int, start, end Position) []Position {
 		start: {start},
 	}
 	positionsQueue := []Position{start}
-	for len(shortestPaths[end]) == 0 {
-		for _, position := range positionsQueue {
-			for dx := -1; dx <= 1; dx++ {
-				for dy := -1; dy <= 1; dy++ {
-					// Skip self and diagonals
-					if (dx == 0 && dy == 0) || (dx != 0 && dy != 0) {
-						continue
-					}
-					x, y := position.x+dx, position.y+dy
-					// Skip out of bounds
-					if x < 0 || x >= len(heightMap[0]) || y < 0 || y >= len(heightMap) {
-						continue
-					}
-					// Skip if the height difference is more than 1
-					if heightMap[y][x]-heightMap[position.y][position.x] > 1 {
-						continue
-					}
-					// Skip if a shorter path already exists
-					if _, ok := shortestPaths[Position{x, y}]; ok {
-						continue
-					}
-					shortestPaths[Position{x, y}] = append(shortestPaths[position], Position{x, y})
 
-					// If we reached the destination, we can stop
-					if x == end.x && y == end.y {
-						return shortestPaths[end]
-					}
-
-					positionsQueue = append(positionsQueue, Position{x, y})
+	for i := 0; i < len(positionsQueue); i++ {
+		position := positionsQueue[i]
+		for dx := -1; dx <= 1; dx++ {
+			for dy := -1; dy <= 1; dy++ {
+				// Skip self and diagonals
+				if (dx == 0 && dy == 0) || (dx != 0 && dy != 0) {
+					continue
 				}
+				x, y := position.x+dx, position.y+dy
+				// Skip out of bounds
+				if x < 0 || x >= len(heightMap[0]) || y < 0 || y >= len(heightMap) {
+					continue
+				}
+				// Skip if the height difference is more than 1
+				if heightMap[y][x]-heightMap[position.y][position.x] > 1 {
+					continue
+				}
+				// Skip if a shorter path already exists
+				if _, ok := shortestPaths[Position{x, y}]; ok {
+					continue
+				}
+				shortestPaths[Position{x, y}] = append(shortestPaths[position], Position{x, y})
+
+				// If we reached the destination, we can stop
+				if x == end.x && y == end.y {
+					return shortestPaths[end]
+				}
+
+				positionsQueue = append(positionsQueue, Position{x, y})
 			}
 		}
 	}
