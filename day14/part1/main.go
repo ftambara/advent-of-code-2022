@@ -10,9 +10,7 @@ import (
 
 func main() {
 	paths := ReadPaths("day14/input.txt")
-	for _, path := range paths {
-		fmt.Printf("%v\n", path)
-	}
+
 	sandSource := Pos{500, 0}
 	positions := []Pos{sandSource}
 	for _, path := range paths {
